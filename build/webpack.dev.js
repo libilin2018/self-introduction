@@ -16,6 +16,7 @@ module.exports = merge(baseConfig, {
         },
       },
     },
+    watchFiles: ['./src/index.html']
   },
   cache: true
 });

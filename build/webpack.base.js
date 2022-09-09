@@ -13,7 +13,7 @@ module.exports = {
   output: {
     path: path.resolve(rootDir, 'dist'),
     filename: 'bundle.[contenthash:8].js',
-    assetModuleFilename: 'images/[hash][ext][query]'
+    assetModuleFilename: 'images/[name][hash:6][ext][query]'
   },
   module: {
     rules: [
@@ -24,7 +24,7 @@ module.exports = {
         exclude: /node_modules/,
       },
       {
-        test: /\.(le|sc|c)ss$/,
+        test: /\.(le|s[ac]|c)ss$/,
         use: [
           devMode ? 'style-loader' : MiniCssExtractPlugin.loader,
           'css-loader',
@@ -36,6 +36,7 @@ module.exports = {
               }
             }
           },
+          'postcss-loader',
           'less-loader',
           'sass-loader'
         ],
@@ -76,5 +77,5 @@ module.exports = {
         }
       ]
     })
-  ].concat(devMode ? [] : [new MiniCssExtractPlugin({ filename: 'css/[name].css' })]),
+  ].concat(devMode ? [] : [new MiniCssExtractPlugin({ filename: 'css/[name].[hash:8].css' })]),
 }
