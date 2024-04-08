@@ -9,7 +9,10 @@ const devMode = process.env.NODE_ENV !== 'production';
 const rootDir = process.cwd();
 
 module.exports = {
-  entry: path.resolve(rootDir, 'src/index.js'),
+  entry: {
+    main: path.resolve(rootDir, 'src/index.js'),
+    picture: path.resolve(rootDir, 'src/picture.js'),
+  },
   output: {
     path: path.resolve(rootDir, 'dist'),
     filename: 'bundle.[contenthash:8].js',
@@ -24,7 +27,7 @@ module.exports = {
         exclude: /node_modules/,
       },
       {
-        test: /\.(le|s[ac]|c)ss$/,
+        test: /\.(s[ac]|c)ss$/,
         use: [
           devMode ? 'style-loader' : MiniCssExtractPlugin.loader,
           'css-loader',
@@ -36,9 +39,24 @@ module.exports = {
               }
             }
           },
-          'postcss-loader',
-          'less-loader',
           'sass-loader'
+        ],
+        exclude: /node_modules/,
+      },
+      {
+        test: /\.(le|c)ss$/,
+        use: [
+          devMode ? 'style-loader' : MiniCssExtractPlugin.loader,
+          'css-loader',
+          {
+            loader: 'postcss-loader',
+            options: {
+              postcssOptions: {
+                plugins: ['autoprefixer']
+              }
+            }
+          },
+          'less-loader',
         ],
         exclude: /node_modules/,
       },
@@ -63,8 +81,17 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: path.resolve(rootDir, 'src/index.html'),
+      filename: 'index.html',
       inject: 'body',
       scriptLoading: 'blocking',
+      chunks: ['main']
+    }),
+    new HtmlWebpackPlugin({
+      template: path.resolve(rootDir, 'src/picture.html'),
+      filename: 'picture.html',
+      inject: 'body',
+      scriptLoading: 'blocking',
+      chunks: ['picture']
     }),
     new CleanWebpackPlugin(),
     new OptimizeCssPlugin(),
